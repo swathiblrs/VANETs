@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07111f" />
+    <meta
+      name="description"
+      content="Run a VANET clustering and secure-routing simulation directly in your browser."
+    />
+    <meta property="og:title" content="VANET Cloud Simulator" />
+    <meta property="og:description" content="Animate vehicles, compare secure cluster routing, and generate performance graphs online." />
+    <meta property="og:image" content="/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>VANET Cloud Simulator</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="VANET Cloud Simulator home">
+        <span class="brand-mark">V</span>
+        <span><strong>VANET</strong><small>Cloud Simulator</small></span>
+      </a>
+      <div class="status"><span></span> Browser simulation ready</div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">V2V · V2I · SECURE CLUSTER ROUTING</p>
+          <h1>Watch the network.<br /><em>Measure every packet.</em></h1>
+          <p class="hero-copy">
+            A complete VANET demonstration that runs online—animate moving vehicles,
+            compare routing protocols, detect malicious traffic, and generate performance
+            graphs without installing simulation software.
+          </p>
+        </div>
+        <div class="hero-facts">
+          <div><strong id="heroVehicles">15</strong><span>Vehicles</span></div>
+          <div><strong>4</strong><span>RSU clusters</span></div>
+          <div><strong>20s</strong><span>Simulation</span></div>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="VANET simulation controls and map">
+        <aside class="controls">
+          <div class="section-heading">
+            <span>01</span>
+            <div><p>Simulation setup</p><h2>Configure scenario</h2></div>
+          </div>
+
+          <label for="protocol">Routing protocol</label>
+          <select id="protocol">
+            <option value="flooding">AODV-like flooding</option>
+            <option value="clustered">Clustered routing</option>
+            <option value="secure" selected>Secure clustered routing</option>
+          </select>
+
+          <div class="slider-row">
+            <label for="vehicleCount">Vehicles <output id="vehicleValue">15</output></label>
+            <input id="vehicleCount" type="range" min="8" max="30" value="15" />
+          </div>
+          <div class="slider-row">
+            <label for="range">Radio range <output id="rangeValue">390 m</output></label>
+            <input id="range" type="range" min="220" max="520" step="10" value="390" />
+          </div>
+          <div class="slider-row">
+            <label for="malicious">Malicious traffic <output id="maliciousValue">15%</output></label>
+            <input id="malicious" type="range" min="0" max="35" value="15" />
+          </div>
+
+          <div class="legend">
+            <p><span class="dot vehicle"></span>Trusted vehicle</p>
+            <p><span class="dot malicious"></span>Malicious vehicle</p>
+            <p><span class="dot rsu"></span>Roadside unit</p>
+            <p><span class="line"></span>Active wireless link</p>
+          </div>
+
+          <button id="runButton" class="primary">Run simulation <span>→</span></button>
+          <button id="resetButton" class="secondary">Reset scenario</button>
+          <p class="privacy-note">All calculations run in this browser. No data is uploaded.</p>
+        </aside>
+
+        <div class="map-panel">
+          <div class="panel-top">
+            <div>
+              <p>Live network</p>
+              <h2>Road topology</h2>
+            </div>
+            <div class="time"><span id="runState">READY</span><strong id="clock">00.0s</strong></div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="networkCanvas" width="1100" height="660" aria-label="Animated VANET road network"></canvas>
+            <div class="map-note">1500 m × 1500 m simulation area</div>
+          </div>
+          <div class="event-strip">
+            <span class="pulse"></span>
+            <p id="eventText">Configure the network and start the simulation.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="results" id="results">
+        <div class="section-heading light">
+          <span>02</span>
+          <div><p>Performance output</p><h2>Results dashboard</h2></div>
+        </div>
+
+        <div class="metric-grid">
+          <article><p>Packet delivery ratio</p><strong id="pdr">92.01<span>%</span></strong><small id="pdrDelta">Trusted packets delivered</small></article>
+          <article><p>Average delay</p><strong id="delay">9.53<span>ms</span></strong><small>End-to-end latency</small></article>
+          <article><p>Throughput</p><strong id="throughput">102.54<span>kbps</span></strong><small>Application data delivered</small></article>
+          <article><p>Routing overhead</p><strong id="overhead">7.27<span>x</span></strong><small>Control packets / delivered</small></article>
+          <article class="blocked"><p>Threats blocked</p><strong id="blocked">958</strong><small>Rejected before routing</small></article>
+        </div>
+
+        <div class="charts">
+          <article class="chart-card wide">
+            <div><p>Protocol comparison</p><h3>Delivery and throughput</h3></div>
+            <canvas id="comparisonChart" width="900" height="360" aria-label="Protocol comparison bar chart"></canvas>
+          </article>
+          <article class="chart-card">
+            <div><p>During this run</p><h3>Packets over time</h3></div>
+            <canvas id="timelineChart" width="560" height="360" aria-label="Packet delivery line graph"></canvas>
+          </article>
+          <article class="chart-card">
+            <div><p>Network cost</p><h3>Delay vs overhead</h3></div>
+            <canvas id="costChart" width="560" height="360" aria-label="Delay and overhead graph"></canvas>
+          </article>
+        </div>
+
+        <div class="result-actions">
+          <div><strong>Simulation complete</strong><p id="summaryText">Secure clustering protected the network while preserving reliable delivery.</p></div>
+          <button id="downloadButton">Download results CSV</button>
+        </div>
+      </section>
+
+      <section class="how">
+        <div class="section-heading">
+          <span>03</span>
+          <div><p>Under the hood</p><h2>How it works</h2></div>
+        </div>
+        <div class="steps">
+          <article><b>1</b><h3>Build topology</h3><p>Vehicles move along two-way roads while four fixed RSUs provide cluster infrastructure.</p></article>
+          <article><b>2</b><h3>Discover routes</h3><p>The live graph finds reachable single-hop and multi-hop V2V or V2I paths.</p></article>
+          <article><b>3</b><h3>Verify traffic</h3><p>Secure mode rejects revoked senders and tampered messages before they enter the route.</p></article>
+          <article><b>4</b><h3>Calculate results</h3><p>Every packet contributes to delivery, delay, throughput, overhead, and security metrics.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="brand"><span class="brand-mark">V</span><span><strong>VANET</strong><small>Cloud Simulator</small></span></div>
+      <p>Standalone educational simulation · No installation required</p>
+    </footer>
+    <script src="/app.js"></script>
+  </body>
+</html>
