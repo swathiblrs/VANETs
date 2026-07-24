@@ -1,0 +1,4 @@
+protocol,offered,legitimate,delivered,auth_drops,route_drops,pdr_percent,delay_ms,throughput_kbps,control_packets,overhead_ratio
+AODV-like flooding,6400,6400,5607,0,793,87.609,8.610,114.831,66292,11.823
+Clustered routing,6400,6400,5937,0,463,92.766,7.839,121.590,42297,7.124
+Secure clustered routing,6400,5442,5007,958,435,92.007,9.526,102.543,36420,7.274
