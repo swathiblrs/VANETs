@@ -1,15 +1,30 @@
-# 🚗 VANET Clustering and Secure Routing Experiment
+# 🚗 VANET Cloud Simulator
 
-A standalone vehicular ad-hoc network research project that models moving
-vehicles, roadside units, multi-hop communication, cluster-based routing, and
-secure packet delivery using portable C++17.
+An interactive cloud-hosted vehicular ad-hoc network simulator for moving
+vehicles, roadside units, multi-hop communication, cluster-based routing,
+malicious-traffic detection, and live performance graphs.
 
-The project is inspired by the accompanying report, *Performance Analysis of
-VANET Clustering Routing Protocol*. It compares AODV-like route flooding with
-clustered and secure clustered routing, then generates reproducible measurements
-for packet delivery, delay, throughput, and routing overhead.
+## 🌐 Live Cloud Application
 
-No NS-2, NAM, Docker, Python packages, or third-party libraries are required.
+### [Open the VANET Cloud Simulator](https://vanet-cloud-simulator.ssjgssjv.chatgpt.site)
+
+The hosted application runs entirely in the browser. It does not require NS-2,
+NAM, Docker, a compiler, or any software installation. The private deployment
+may ask you to sign in before opening the simulator.
+
+Use the cloud dashboard to:
+
+- Animate vehicles, RSUs, clusters, and changing wireless links
+- Switch between AODV-like flooding, clustered routing, and secure clustered routing
+- Adjust the vehicle count, radio range, and malicious-traffic percentage
+- Run a complete 20-second network scenario
+- View live PDR, delay, throughput, overhead, and threat-blocking metrics
+- Generate protocol-comparison and time-series graphs
+- Export the current simulation result as a CSV file
+
+The repository also retains the portable C++17 implementation for reproducible
+offline execution and verification of the underlying routing and authentication
+logic.
 
 ## 🌟 Why This Project Exists
 
@@ -24,6 +39,8 @@ accepted.
 
 The project can:
 
+- Run as a free cloud-hosted browser application
+- Display the network and result graphs interactively
 - Model moving vehicles on horizontal and vertical road corridors
 - Rebuild wireless connectivity as vehicles move
 - Find current single-hop and multi-hop routes
@@ -61,6 +78,9 @@ Collect metrics and write CSV results
 
 Core components:
 
+- Browser-based cloud simulation dashboard
+- HTML Canvas network animation and performance graphs
+- Adjustable scenario controls and CSV export
 - C++17 simulation engine
 - Dynamic vehicle mobility model
 - Distance-based wireless connectivity graph
@@ -107,6 +127,7 @@ Core components:
 
 ### 📊 Metrics and Evaluation
 
+- Live interactive graphs in the hosted dashboard
 - Packet delivery ratio for legitimate traffic
 - Average end-to-end delay in milliseconds
 - Delivered application throughput in kilobits per second
@@ -138,12 +159,21 @@ Core components:
 - Measure the effect of routing overhead on modeled network contention
 - Test different vehicle densities or radio ranges
 - Demonstrate V2V and V2I communication concepts
-- Use deterministic simulation results in an academic VANET analysis
+- Present a complete working VANET demonstration with downloadable results
 
 ## 📂 Project Structure
 
 ```text
 VANETs/
+├── web/
+│   ├── static/
+│   │   ├── index.html      # Cloud dashboard interface
+│   │   ├── app.js          # Browser simulation and graph engine
+│   │   ├── styles.css      # Responsive dashboard design
+│   │   └── og.png          # Link-sharing preview
+│   ├── worker/             # Cloud request handler
+│   ├── scripts/            # Deployment build script
+│   └── .openai/            # Cloud hosting configuration
 ├── vanet_experiment.cpp    # Full routing comparison and CSV generation
 ├── vanet_sim.cpp           # Compact mobility and HMAC-SHA1 demonstration
 ├── Makefile                # Build and run commands
@@ -156,7 +186,19 @@ VANETs/
 
 ## 🚀 Getting Started
 
-### ✅ Prerequisites
+### ☁️ Use Online — Recommended
+
+Open the hosted application:
+
+**[https://vanet-cloud-simulator.ssjgssjv.chatgpt.site](https://vanet-cloud-simulator.ssjgssjv.chatgpt.site)**
+
+Choose a routing protocol, adjust the scenario, and select **Run simulation**.
+The network animation and graphs are calculated directly in the browser. Select
+**Download results CSV** to save the displayed result.
+
+### 💻 Run the C++ Version Locally — Optional
+
+#### ✅ Prerequisites
 
 - macOS or Linux
 - A C++17-compatible compiler
@@ -165,7 +207,7 @@ VANETs/
 macOS Command Line Tools already provide the required compiler and build tools.
 No simulator or package installation is needed.
 
-### 🔧 Build the Project
+#### 🔧 Build the Project
 
 Clone the repository:
 
@@ -182,7 +224,7 @@ make
 
 Generated executables are written to `build/`.
 
-### 🧪 Run the Full Experiment
+#### 🧪 Run the Full Experiment
 
 ```sh
 make experiment
@@ -196,7 +238,7 @@ results/summary.csv
 results/runs.csv
 ```
 
-### 🔏 Run the Authentication Demonstration
+#### 🔏 Run the Authentication Demonstration
 
 ```sh
 make run
@@ -236,6 +278,10 @@ Key observations:
 
 ## ⚡ Performance and Reliability
 
+- Cloud dashboard requires no local software installation
+- Simulation data remains in the browser and is not uploaded
+- Interactive metrics and graphs update when scenario inputs change
+- Results can be exported directly as CSV
 - Fixed random seeds make every committed result reproducible
 - Source builds cleanly with strict compiler warnings enabled
 - No network access is needed to run the experiment
@@ -245,16 +291,17 @@ Key observations:
 
 ## ⚠️ Model Scope
 
-This is a standalone discrete-event research model, not a packet-accurate IEEE
-802.11 implementation and not an NS-2 execution.
+The cloud application is an interactive reconstruction of the original VANET
+project idea. It is not the lost NS-2 source code and does not claim that its
+browser-generated values were produced by NS-2.
 
-Collision probability is estimated using route length and route-control traffic.
-Authentication processing and packet rejection are modeled in the comparative
-experiment. Actual HMAC-SHA1 computation is demonstrated separately in
-`vanet_sim.cpp`.
+The browser dashboard calculates results from the selected protocol, network
+density, radio range, malicious-traffic level, moving topology, and modeled
+contention. The C++ experiment provides deterministic comparison runs, while
+`vanet_sim.cpp` separately demonstrates actual HMAC-SHA1 computation.
 
-The generated values must therefore be described as results of this model, not as
-real-road measurements or NS-2 results.
+Generated values should be described as cloud-simulator results rather than
+real-road measurements or recovered NS-2 results.
 
 ## 🔬 Extending the Experiment
 
