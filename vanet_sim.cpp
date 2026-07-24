@@ -1,8 +1,20 @@
-// vanet_sim_auth.cpp
+// vanet_sim.cpp
 // VANET demo with hop-by-hop authentication using HMAC-SHA1.
-// Build: g++ -std=c++17 -O2 vanet_sim_auth.cpp -o vanet_auth && ./vanet_auth
+// Build: c++ -std=c++17 -O2 vanet_sim.cpp -o vanet_sim && ./vanet_sim
 
-#include <bits/stdc++.h>
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <cstdint>
+#include <cstdlib>
+#include <iomanip>
+#include <iostream>
+#include <queue>
+#include <random>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 using namespace std;
 
 /* ----------------------------- Minimal SHA1 ------------------------------ */
@@ -159,10 +171,20 @@ struct Vanet {
     }
 
     vector<int> route(int s, int d, int maxHops=50){
-        int n=nodes.size(); vector<int> par(n,-1); queue<int> q; q.push(s); par[s]=s;
+        int n=nodes.size();
+        vector<int> par(n,-1), hops(n,-1);
+        queue<int> q;
+        q.push(s);
+        par[s]=s;
+        hops[s]=0;
         while(!q.empty()){
             int u=q.front(); q.pop(); if(u==d) break;
-            for(int v:adj[u]) if(par[v]==-1){ par[v]=u; q.push(v); }
+            if(hops[u] >= maxHops) continue;
+            for(int v:adj[u]) if(par[v]==-1){
+                par[v]=u;
+                hops[v]=hops[u]+1;
+                q.push(v);
+            }
         }
         if(par[d]==-1) return {};
         vector<int> path; for(int v=d;;v=par[v]){ path.push_back(v); if(v==s) break; }
@@ -171,7 +193,7 @@ struct Vanet {
 
     Message makeMessage(int src, int dst, string payload, int ttl=10){
         uniform_int_distribution<uint64_t> dist;
-        Message m{src,dst,ttl,move(payload),{},dist(rng)};
+        Message m{src,dst,ttl,std::move(payload),{},dist(rng)};
         string key = TA.getKey(src);
         string meta = to_string(src)+"|"+to_string(dst)+"|"+to_string(ttl)+"|"+m.payload+"|"+to_string(m.nonce);
         m.mac = hmac_sha1(key, meta);
@@ -216,15 +238,15 @@ struct Vanet {
 int main(){
     Vanet sim(150.0);
 
-    int rsuA = sim.addRSU({100,500},"key_rsuA");
-    int rsuB = sim.addRSU({700,100},"key_rsuB");
+    int rsuA = sim.addRSU({100,280},"key_rsuA");
+    int rsuB = sim.addRSU({700,315},"key_rsuB");
 
-    auto rnd = [](double a,double b){ return a + (b-a)*(rand()/(double)RAND_MAX); };
-    srand(7);
+    // A connected two-lane corridor. Small alternating velocities keep the
+    // topology dynamic while preserving routes for this deterministic demo.
     vector<int> V;
     for(int i=0;i<8;i++){
-        Pos p{ rnd(50,750), rnd(50,550) };
-        double vx=rnd(-40,40), vy=rnd(-40,40);
+        Pos p{140.0 + i*75.0, 280.0 + (i%2)*35.0};
+        double vx=(i%2==0 ? 4.0 : -4.0), vy=0.0;
         V.push_back(sim.addVehicle(p,vx,vy,"veh_key_"+to_string(i)));
     }
 
@@ -233,7 +255,7 @@ int main(){
         sim.step(1.0);
         sim.printSnapshot();
 
-        auto msg1 = sim.makeMessage(V[0], V[4], "V2V safety alert", 8);
+        auto msg1 = sim.makeMessage(V[0], V[7], "V2V safety alert", 8);
         sim.deliver(msg1);
 
         auto msg2 = sim.makeMessage(V[2], rsuA, "Telemetry upload", 8);

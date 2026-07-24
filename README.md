@@ -9,3 +9,34 @@ Objectives
 • Performance comparison of existing and enhanced clustering protocols.
 
 • To implement the security parameter.
+
+## Standalone implementation
+
+The repository includes a portable C++17 VANET demonstration. It models moving
+vehicles and road-side units, rebuilds wireless links at every time step, finds
+single-hop or multi-hop routes, and authenticates messages with HMAC-SHA1. It also
+demonstrates rejection of a packet whose authentication code has been modified.
+
+This implementation is a lightweight executable version of the authentication and
+routing concepts in the report. It is not an NS-2 simulation and does not reproduce
+the report's NS-2/NAM graphs.
+
+### Build and run
+
+Requirements: a C++17 compiler and `make`.
+
+```sh
+make clean
+make
+./build/vanet_sim
+```
+
+Or compile directly:
+
+```sh
+c++ -std=c++17 -O2 -Wall -Wextra -pedantic vanet_sim.cpp -o vanet_sim_local
+./vanet_sim_local
+```
+
+The old checked-in `vanet_sim` executable may have been built for a different
+operating system or CPU. Rebuild it from source on the target machine.
