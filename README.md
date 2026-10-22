@@ -1,4 +1,4 @@
-# 🚗 VANET Cloud Simulator
+# 🚗 VANET (Vehicular Ad Hoc Network)
 
 An interactive cloud-hosted vehicular ad-hoc network simulator for moving
 vehicles, roadside units, multi-hop communication, cluster-based routing,
@@ -6,7 +6,7 @@ malicious-traffic detection, and live performance graphs.
 
 ## 🌐 Live Cloud Application
 
-### [Open the VANET Cloud Simulator](https://vanet-cloud-simulator.ssjgssjv.chatgpt.site)
+### [Open VANET (Vehicular Ad Hoc Network)](https://vanet-cloud-simulator.ssjgssjv.chatgpt.site)
 
 The hosted application runs entirely in the browser. It does not require NS-2,
 NAM, Docker, a compiler, or any software installation. The private deployment
